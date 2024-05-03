@@ -99,7 +99,7 @@ while running:
         ball_direction[0] *= -1
         score += 500
         if ball_tick > 0:
-            ball_tick += -1
+            ball_tick += -0.2
 
     # Game over
     if (WINDOW_HEIGHT - ball_size / 2) <= ball[0]:
