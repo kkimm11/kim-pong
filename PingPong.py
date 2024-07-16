@@ -1,11 +1,12 @@
 # Import library
 import pygame
 import random
+import copy
 
 # Game option
 WINDOW_HEIGHT = 360
 WINDOW_WIDTH = 640
-WINDOW_FPS = 144
+WINDOW_FPS = 144 # *WARNING* - Settings below 144hz will cause things to behave differently than intended.
 
 # Color
 BLACK = pygame.Color(0, 0, 0)
@@ -39,10 +40,11 @@ ball_tick = 10
 
 # Bar
 bar = [WINDOW_HEIGHT - 20, WINDOW_WIDTH / 2]
+bar_previous = bar
 bar_size = 50
 bar_direction = "none"
 bar_time = 0
-bar_tick = 1
+bar_tick = 5
 
 # Main loop
 while running:
@@ -73,6 +75,7 @@ while running:
 
     # Bar
     if time - bar_time >= bar_tick:
+        bar_previous = copy.copy(bar)
         if bar_direction == "left":
             bar[1] += -2
         if bar_direction == "right":
@@ -94,12 +97,16 @@ while running:
     if ball[0] <= (0 + ball_size / 2):
         ball[0] += 10
         ball_direction[0] *= -1
-    if (bar[0] - ball_size / 2) <= ball[0] <= (bar[0] + 5 - ball_size / 2) and bar[1] <= ball[1] <= bar[1] + bar_size:
-        ball[0] += -10
-        ball_direction[0] *= -1
-        score += 500
-        if ball_tick > 0:
-            ball_tick += -0.2
+
+    if (bar[0] - ball_size / 2) <= ball[0] and ball[0] <= (bar[0] + 5 - ball_size / 2):
+        if bar[1] <= ball[1] and ball[1] <= (bar[1] + bar_size):
+            ball[0] += -10
+            ball_direction[0] *= -1
+            bar_delta = bar[1]-bar_previous[1]
+            ball_direction[1] += bar_delta*0.5*random.random()
+            score += 500
+            if ball_tick > 0:
+                ball_tick += -1
 
     # Game over
     if (WINDOW_HEIGHT - ball_size / 2) <= ball[0]:
