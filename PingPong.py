@@ -76,6 +76,28 @@ def show_start_screen():
                     start_screen = False
 
 
+# Game over screen
+def show_game_over_screen(final_score):
+    """Displays the game over screen with the final score."""
+    game_over = True
+    while game_over:
+        window.fill(BLACK)
+        font = pygame.font.SysFont(None, 50)
+        game_over_text = font.render("GAME OVER", True, RED)
+        score_text = font.render(f"Your Score: {final_score}", True, WHITE)
+        window.blit(game_over_text, (WINDOW_WIDTH // 2 - game_over_text.get_width() // 2, WINDOW_HEIGHT // 2 - 60))
+        window.blit(score_text, (WINDOW_WIDTH // 2 - score_text.get_width() // 2, WINDOW_HEIGHT // 2))
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:  # Restart game on Enter
+                    game_over = False
+
+
 # Show start screen
 show_start_screen()
 running = True
@@ -153,7 +175,7 @@ while running:
     window.blit(pygame.font.SysFont(None, 25).render(str(score), True, WHITE), (10, 10))
     pygame.display.update()
 
-# Quit
-print("Your score is : " + str(score))
+# Show game over screen
+show_game_over_screen(score)
 pygame.quit()
 quit()
